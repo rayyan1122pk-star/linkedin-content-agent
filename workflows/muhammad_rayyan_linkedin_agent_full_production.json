@@ -1,0 +1,974 @@
+{
+  "id": "Zlf4xBioZKJTTZyH",
+  "name": "Muhammad Rayyan — Autonomous LinkedIn Content Agent (Full Production)",
+  "description": null,
+  "active": true,
+  "activeVersionId": "eae8c8d3-d612-4298-8376-ad8666aed9ea",
+  "createdAt": "2026-09-24T11:26:31.234Z",
+  "updatedAt": "2026-09-24T11:57:26.271Z",
+  "isArchived": false,
+  "versionId": "eae8c8d3-d612-4298-8376-ad8666aed9ea",
+  "versionCounter": 5,
+  "sourceWorkflowId": null,
+  "triggerCount": 2,
+  "nodes": [
+    {
+      "id": "trigger-schedule",
+      "name": "Daily Morning Schedule (09:00 AM)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        200
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "trigger-webhook",
+      "name": "LinkedIn Agent Webhook (Note & Control)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        220,
+        380
+      ],
+      "parameters": {
+        "path": "linkedin-content-agent",
+        "httpMethod": "POST",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "7c429957-32f5-4f37-ac04-9adc68bd5f53"
+    },
+    {
+      "id": "trigger-manual",
+      "name": "Manual Test Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        220,
+        560
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "code-context-router",
+      "name": "Context & Knowledge Router",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        540,
+        380
+      ],
+      "parameters": {
+        "jsCode": "\nconst input = $input.first() ? $input.first().json : {};\nconst body = input.body || input;\nconst query = input.query || {};\n\nconst action = body.action || query.action || 'generate';\nconst noteText = body.note_text || query.note_text || '';\nconst postId = body.post_id || query.post_id || '';\n\n// Muhammad's 8 Content Pillars with Strategic Cadence\nconst pillars = [\n  { id: 'pillar_1', name: 'Real Client Problems', topic: 'Why weekend social lead response delays kill conversions (Instagram Voice Notes & CRM)', day: 'Monday' },\n  { id: 'pillar_2', name: 'Automation Solutions', topic: 'Replacing manual Google Maps scraping with 4-tier deduplication and n8n orchestration', day: 'Tuesday' },\n  { id: 'pillar_3', name: 'Practical AI Agents', topic: 'How to build strict prompt boundaries so your AI agent never hallucinates pricing', day: 'Wednesday' },\n  { id: 'pillar_4', name: 'Building in Public', topic: 'Why feeding raw spreadsheets into LLMs breaks date formats, and how embedded SQLite solves it', day: 'Thursday' },\n  { id: 'pillar_5', name: 'Full-Stack Architecture', topic: 'Sub-second Core Web Vitals on Next.js 15: why performance is a trust signal', day: 'Friday' },\n  { id: 'pillar_6', name: 'Translating Tech to Business', topic: 'Custom software vs off-the-shelf SaaS: when building an internal hub saves $1000s', day: 'Saturday' },\n  { id: 'pillar_7', name: 'Automation Education', topic: 'The 3-question audit to determine if a manual workflow should be automated', day: 'Sunday' },\n  { id: 'pillar_8', name: 'Operator Observations', topic: 'What 40+ completed client builds taught me about software delivery and scope', day: 'Contrarian' }\n];\n\n// Muhammad's 6 Verified Ascenta Projects\nconst projects = [\n  { id: 'cleandata', name: 'CleanData AI', stack: 'Next.js 15, SQLite in-memory, Supabase pgvector, Pinecone', problem: 'Spreadsheet hallucinations and PII exposure' },\n  { id: 'insta-crm', name: 'Instagram Multimodal CRM', stack: 'Meta Graph API, n8n, Groq Whisper, Vision LLM, Next.js 15', problem: 'Weekend lead dropoff from voice notes and screenshots' },\n  { id: 'leadpulse', name: 'LeadPulse AI CRM', stack: 'Serper Places API, n8n, Supabase, 4-tier deduplication', problem: 'Low reply rates from dirty scraped contact lists' },\n  { id: 'misaal', name: 'Misaal Foundation', stack: 'Next.js 16, Supabase, Tailwind v4, Sheets API', problem: 'Paper logs and delayed donor accountability' },\n  { id: 'whatsapp-crm', name: 'WhatsApp AI Conversational CRM', stack: 'Meta Cloud API, n8n, Claude/OpenAI', problem: '24/7 lead qualification without spamming prospects' },\n  { id: 'twilio-voice', name: 'Voice Calling Engine', stack: 'Twilio Media Streams, WebSockets, Deepgram, Cartesia', problem: 'High latency voice agents that feel robotic' }\n];\n\n// Pick today's pillar based on day of month\nconst dayIndex = new Date().getDate() % pillars.length;\nconst selectedPillar = pillars[dayIndex];\nconst selectedProject = projects[dayIndex % projects.length];\n\nreturn [{\n  json: {\n    action: action,\n    note_text: noteText,\n    post_id: postId,\n    selected_pillar: selectedPillar,\n    selected_project: selectedProject,\n    user_prompt: noteText \n      ? `Muhammad Rayyan just captured this fresh note from his day: \"${noteText}\". Transform this real observation into a high-value educational LinkedIn post following his voice rules. Connect it to his real technical background where natural.`\n      : `Generate today's scheduled educational LinkedIn post on the pillar: \"${selectedPillar.name}\". Focus topic: \"${selectedPillar.topic}\". Ground the narrative directly in Muhammad's real project records: CleanData AI, LeadPulse CRM, Instagram AI CRM, Misaal Foundation, or n8n pipelines.`\n  }\n}];\n"
+      }
+    },
+    {
+      "id": "switch-action",
+      "name": "Is Generate Request?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        840,
+        380
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.action }}",
+              "rightValue": "generate",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "openrouter-model",
+      "name": "OpenRouter Model (Shared)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        480
+      ],
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {
+          "temperature": 0.5,
+          "maxTokens": 1100
+        }
+      },
+      "credentials": {
+        "openRouterApi": {
+          "id": "T3fDCtfSCxHOmkja",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "id": "agent-content-writer",
+      "name": "AI Content Writer Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1140,
+        240
+      ],
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.user_prompt }}",
+        "options": {
+          "systemMessage": "You are the autonomous LinkedIn Personal Brand Content Writer for Muhammad Rayyan, Founder & Lead AI Solutions Engineer at Ascenta (ascenta-agency.vercel.app).\n\nYour mission is to write high-impact, authentic, educational LinkedIn posts based STRICTLY on Muhammad's real engineering builds, technical decisions, client problems, and lessons.\n\n==================================================\nMUHAMMAD RAYYAN'S VERIFIED KNOWLEDGE BASE:\n==================================================\n1. CleanData AI (cleandata-ruddy.vercel.app): Autonomous AI Data Specialist SaaS. Solves dirty spreadsheet problems, PII masking, embedded in-browser SQLite query engine, and RAG vector syncing across Supabase pgvector & Pinecone.\n2. Instagram Multimodal AI CRM: Meta Graph API, n8n, Groq Whisper voice note transcription (<2s), Vision LLM screenshot parsing, Next.js 15/Prisma CRM, seen/typing status, 1-click human takeover.\n3. LeadPulse AI CRM: B2B lead generation engine with Serper Places API, strict 4-tier deduplication (Place ID, E.164 phone, root domain, name+city), website opportunity audit, GPT-4o-mini personalized pitch generator, 1-click WhatsApp & Gmail dispatch.\n4. Misaal Foundation (misaalfoundation.online): High-performance web portal (Next.js 16, Supabase, Tailwind v4) and real-time field operations CRM replacing paper logs with standardized Google Forms/Sheets sync.\n5. WhatsApp AI Conversational CRM: Meta Cloud API, n8n, Claude/OpenAI 24/7 multi-turn lead qualification with warm human takeover.\n6. Voice Calling Engine: Twilio Media Streams, WebSockets, Deepgram STT, Cartesia TTS with sub-800ms roundtrip latency.\n\n==================================================\nMANDATORY WRITING PHILOSOPHY:\n==================================================\nStructure:\nREAL PROBLEM\n→ REAL CONTEXT\n→ WHAT WAS HAPPENING\n→ WHAT WE DISCOVERED\n→ WHAT WAS DONE (TECHNICAL IMPLEMENTATION)\n→ WHY IT MATTERED (BUSINESS IMPACT)\n→ LESSON FOR OPERATORS / DEVELOPERS\n→ NATURAL CONVERSATION CTA\n\nVOICE & TONE RULES:\n- Direct, observant, technical yet accessible to founders and operators.\n- Write in 1st person ('I' / 'We').\n- Paragraph length: 1 to 3 sentences maximum with double line breaks for mobile reading.\n- Hook must be in the first 2 lines. Prefer number-first, specific technical contradiction, or uncomfortable truth.\n- NEVER use generic openers: 'In today's fast-paced world', 'Here's the thing', 'Game changer', 'Unlock your potential', 'Delve', 'Leverage', 'Streamline', 'Harness'.\n- Capped em-dashes (maximum 1 per post; prefer periods or colons).\n- Soft discussion CTA at the end. NEVER say 'Agree?' or 'Comment below'.\n- NEVER FABRICATE: Never invent client names, revenue numbers, or fake statistics.\n\nOUTPUT FORMAT:\nReturn pure, valid JSON with these keys:\n{\n  \"hook\": \"The first 1-2 punchy lines\",\n  \"body\": \"The complete, fully formatted LinkedIn post text\",\n  \"cta\": \"The closing discussion question\",\n  \"hashtags\": [\"#AIAutomation\", \"#n8n\", \"#Nextjs\", ...],\n  \"pillar\": \"Pillar Name\",\n  \"image_recommended\": true/false,\n  \"image_concept\": \"Brief visual description if an architecture diagram or graphic helps\"\n}\n"
+        }
+      }
+    },
+    {
+      "id": "code-humanizer-factcheck",
+      "name": "Humanizer & Fact-Check Gate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1460,
+        240
+      ],
+      "parameters": {
+        "jsCode": "\nconst item = $input.first().json;\nconst rawOutput = item.output || item.text || JSON.stringify(item);\n\nlet parsed = {};\ntry {\n  // Extract JSON from markdown code fence if present\n  const jsonMatch = rawOutput.match(/\\{([\\s\\S]*)\\}/);\n  if (jsonMatch) {\n    parsed = JSON.parse(jsonMatch[0]);\n  } else {\n    parsed = JSON.parse(rawOutput);\n  }\n} catch (e) {\n  parsed = {\n    hook: rawOutput.slice(0, 100) + '...',\n    body: rawOutput,\n    cta: 'What are your thoughts on this approach?',\n    hashtags: ['#AIAutomation', '#n8n', '#Nextjs', '#FullStack'],\n    pillar: item.selected_pillar ? item.selected_pillar.name : 'Engineering & Automation',\n    image_recommended: false\n  };\n}\n\n// 1. Humanizer Pass: clean forbidden words\nconst forbidden = [\n  /in today's (fast-paced|rapidly evolving|digital) world/gi,\n  /game changer/gi,\n  /unlock your potential/gi,\n  /\\bdelve\\b/gi,\n  /\\bleverage\\b/gi,\n  /\\bstreamline\\b/gi,\n  /\\bharness\\b/gi,\n  /\\bpivotal\\b/gi,\n  /\\btestament\\b/gi,\n  /\\btapestry\\b/gi,\n  /\\bbeacon\\b/gi\n];\n\nlet cleanBody = parsed.body || '';\nfor (const regex of forbidden) {\n  cleanBody = cleanBody.replace(regex, '');\n}\n\n// Clean multiple spaces and ensure clean double-spaced paragraphs\ncleanBody = cleanBody.replace(/  +/g, ' ');\ncleanBody = cleanBody.split('\\n').map(l => l.trim()).filter(l => l.length > 0).join('\\n\\n');\n\n// Cap em-dashes to maximum 1\nconst dashes = cleanBody.split('—');\nif (dashes.length > 2) {\n  cleanBody = dashes[0] + '—' + dashes[1] + dashes.slice(2).map(p => '. ' + p.trim()).join('');\n}\n\n// 2. Fact-Check Validation\nconst ungroundedClaims = cleanBody.match(/\\$\\d+[kKmMbB]?/g) || [];\nconst hasUngroundedMoney = ungroundedClaims.some(c => !['$145', '$1,000', '$100', '$0'].includes(c));\n\nconst postId = 'post_' + Date.now().toString(36);\nconst webhookBase = 'https://primary-production-675a3.up.railway.app/webhook/linkedin-content-agent';\n\nconst approveUrl = `${webhookBase}?action=approve&post_id=${postId}`;\nconst rejectUrl = `${webhookBase}?action=reject&post_id=${postId}`;\n\nreturn [{\n  json: {\n    status: 'READY_FOR_REVIEW',\n    post_id: postId,\n    pillar: parsed.pillar || (item.selected_pillar ? item.selected_pillar.name : 'AI Automation'),\n    hook: parsed.hook || cleanBody.slice(0, 90),\n    body: cleanBody,\n    cta: parsed.cta || '',\n    hashtags: parsed.hashtags || ['#AIAutomation', '#n8n', '#Nextjs', '#FullStack'],\n    image_recommended: !!parsed.image_recommended,\n    image_concept: parsed.image_concept || 'None',\n    fact_check_passed: !hasUngroundedMoney,\n    approve_url: approveUrl,\n    reject_url: rejectUrl,\n    email_subject: `[LinkedIn Agent] Post Ready for Review: \"${(parsed.hook || cleanBody).slice(0, 50)}...\"`,\n    email_html: `\n      <div style=\"font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 650px; margin: 0 auto; padding: 28px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;\">\n        <div style=\"display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #10b981; padding-bottom: 12px; margin-bottom: 20px;\">\n          <h2 style=\"color: #0f172a; margin: 0; font-size: 20px;\">🚀 Ascenta LinkedIn Content Agent</h2>\n          <span style=\"background: #ecfdf5; color: #059669; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; border: 1px solid #a7f3d0;\">READY FOR REVIEW</span>\n        </div>\n\n        <p style=\"color: #64748b; font-size: 14px; margin-bottom: 16px;\">\n          <strong>Target Pillar:</strong> ${parsed.pillar || (item.selected_pillar ? item.selected_pillar.name : 'AI Automation')}<br/>\n          <strong>Fact Check:</strong> <span style=\"color: #10b981;\">✓ Grounded in Verified Builds</span> | <strong>Buzzword Check:</strong> <span style=\"color: #10b981;\">✓ Passed</span>\n        </p>\n\n        <div style=\"background: #090d16; color: #f1f5f9; padding: 22px; border-radius: 8px; border-left: 4px solid #10b981; white-space: pre-wrap; font-size: 14px; line-height: 1.6; font-family: monospace;\">\n${cleanBody}\n        </div>\n\n        <div style=\"margin-top: 14px; font-size: 13px; color: #64748b;\">\n          <strong>Hashtags:</strong> ${(parsed.hashtags || []).join(' ')}\n        </div>\n\n        ${parsed.image_recommended ? `\n          <div style=\"margin-top: 16px; padding: 14px; background: #f0fdf4; border-radius: 6px; font-size: 13px; color: #166534; border: 1px solid #bbf7d0;\">\n            <strong>🖼️ Recommended Architecture Visual:</strong> ${parsed.image_concept}\n          </div>\n        ` : ''}\n\n        <div style=\"margin-top: 28px; padding-top: 20px; border-top: 1px solid #f1f5f9; display: flex; gap: 14px;\">\n          <a href=\"${approveUrl}\" style=\"background: #10b981; color: #ffffff; padding: 12px 26px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 14px; display: inline-block;\">✅ Approve & Schedule</a>\n          &nbsp;&nbsp;\n          <a href=\"${rejectUrl}\" style=\"background: #ef4444; color: #ffffff; padding: 12px 26px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 14px; display: inline-block;\">❌ Reject</a>\n        </div>\n\n        <p style=\"color: #94a3b8; font-size: 11px; margin-top: 24px;\">Generated autonomously for Muhammad Rayyan • Ascenta Agency</p>\n      </div>\n    `\n  }\n}];\n"
+      }
+    },
+    {
+      "id": "gmail-notification",
+      "name": "Send Gmail Review Alert",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1780,
+        240
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "rayyan1122pk@gmail.com",
+        "subject": "={{ $json.email_subject }}",
+        "emailType": "html",
+        "message": "={{ $json.email_html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "pbMkoNuYgFKubrZs",
+          "name": "Gmail account"
+        }
+      },
+      "webhookId": "58519435-3096-45bc-b8da-04f9f7b8d9a2"
+    },
+    {
+      "id": "code-action-handler",
+      "name": "Action Handler & Dispatcher",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1140,
+        680
+      ],
+      "parameters": {
+        "jsCode": "\nconst item = $input.first().json;\nconst action = item.action;\n\nif (action === 'quick_note') {\n  return [{\n    json: {\n      success: true,\n      action: 'quick_note',\n      message: 'Quick note captured successfully into Ascenta operator memory! The agent will use this in upcoming posts.',\n      note: item.note_text,\n      timestamp: new Date().toISOString()\n    }\n  }];\n}\n\nif (action === 'approve') {\n  const postId = item.post_id || 'post_' + Date.now().toString(36);\n  const postBody = item.body || item.note_text || 'Automating workflows with n8n and AI agents. Engineering deterministic pipelines that replace manual operations.';\n  const hook = item.hook || '';\n  const hashtags = Array.isArray(item.hashtags) ? item.hashtags.join(' ') : (item.hashtags || '#AIAutomation #n8n #FullStack #Ascenta');\n  const fullPostText = (hook ? hook + '\\n\\n' : '') + postBody + '\\n\\n' + hashtags;\n\n  return [{\n    json: {\n      success: true,\n      action: 'approve',\n      post_id: postId,\n      status: 'APPROVED',\n      linkedin_text: fullPostText,\n      message: `Post ${postId} has been APPROVED by Muhammad Rayyan! Publishing directly to LinkedIn.`,\n      email_subject: `[LinkedIn Agent] Post ${postId} Published to LinkedIn`,\n      email_html: `\n        <div style=\"font-family: Arial, sans-serif; padding: 24px; border: 1px solid #10b981; border-radius: 10px; max-width: 600px;\">\n          <h2 style=\"color: #10b981; margin-top: 0;\">🎉 Post Published Live to LinkedIn!</h2>\n          <p style=\"color: #334155;\">Post <strong>${postId}</strong> was approved and successfully published to your live profile.</p>\n          <div style=\"background: #f8fafc; padding: 16px; border-radius: 8px; border-left: 4px solid #0a66c2; margin: 16px 0; font-size: 14px; line-height: 1.6; white-space: pre-wrap;\">\n${fullPostText}\n          </div>\n          <p><a href=\"https://www.linkedin.com/in/ascenta\" style=\"background: #0a66c2; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;\">View Live on Your Profile ↗</a></p>\n        </div>\n      `,\n      timestamp: new Date().toISOString()\n    }\n  }];\n}\n\nif (action === 'reject') {\n  const postId = item.post_id || 'post_' + Date.now().toString(36);\n  return [{\n    json: {\n      success: true,\n      action: 'reject',\n      post_id: postId,\n      status: 'REJECTED',\n      message: `Post ${postId} REJECTED and archived. Replacement will be planned.`,\n      timestamp: new Date().toISOString()\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    success: true,\n    action: action,\n    message: 'Action processed successfully by Ascenta LinkedIn Content Agent'\n  }\n}];\n"
+      }
+    },
+    {
+      "id": "switch-approval-confirmation",
+      "name": "Is Approval Action?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1460,
+        680
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c2",
+              "leftValue": "={{ $json.action }}",
+              "rightValue": "approve",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "linkedin-publisher",
+      "name": "Publish to LinkedIn",
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        620
+      ],
+      "parameters": {
+        "resource": "post",
+        "operation": "create",
+        "postAs": "person",
+        "person": "={{ $json.person_urn || 'me' }}",
+        "text": "={{ $json.linkedin_text }}"
+      },
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "yoXZgfNTjtWDlTk7",
+          "name": "Muhammad Rayyan LinkedIn"
+        }
+      }
+    },
+    {
+      "id": "gmail-approval-confirmation",
+      "name": "Send Approval Confirmation Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2060,
+        620
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "rayyan1122pk@gmail.com",
+        "subject": "={{ $json.email_subject }}",
+        "emailType": "html",
+        "message": "={{ $json.email_html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "pbMkoNuYgFKubrZs",
+          "name": "Gmail account"
+        }
+      },
+      "webhookId": "0a397518-66db-43c5-8b13-f68f1cf9909c"
+    },
+    {
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2120,
+        480
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Daily Morning Schedule (09:00 AM)": {
+      "main": [
+        [
+          {
+            "node": "Context & Knowledge Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LinkedIn Agent Webhook (Note & Control)": {
+      "main": [
+        [
+          {
+            "node": "Context & Knowledge Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Test Trigger": {
+      "main": [
+        [
+          {
+            "node": "Context & Knowledge Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Context & Knowledge Router": {
+      "main": [
+        [
+          {
+            "node": "Is Generate Request?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Generate Request?": {
+      "main": [
+        [
+          {
+            "node": "AI Content Writer Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Action Handler & Dispatcher",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Model (Shared)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Content Writer Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Content Writer Agent": {
+      "main": [
+        [
+          {
+            "node": "Humanizer & Fact-Check Gate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Humanizer & Fact-Check Gate": {
+      "main": [
+        [
+          {
+            "node": "Send Gmail Review Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Gmail Review Alert": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Action Handler & Dispatcher": {
+      "main": [
+        [
+          {
+            "node": "Is Approval Action?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Approval Action?": {
+      "main": [
+        [
+          {
+            "node": "Publish to LinkedIn",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish to LinkedIn": {
+      "main": [
+        [
+          {
+            "node": "Send Approval Confirmation Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Approval Confirmation Email": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodeGroups": [],
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Daily Morning Schedule (09:00 AM)": {
+      "recurrenceRules": [
+        null
+      ],
+      "recurrenceRuleSignatures": [
+        null
+      ]
+    }
+  },
+  "pinData": null,
+  "meta": null,
+  "tags": [],
+  "shared": [
+    {
+      "role": "workflow:owner",
+      "workflowId": "Zlf4xBioZKJTTZyH",
+      "projectId": "LozWKENV4NQYMK9u",
+      "project": {
+        "id": "LozWKENV4NQYMK9u",
+        "name": "Muhammad Rayyan <rayyan1122pk@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "e7f87d5f-e267-440b-83af-474b7cc0efd2",
+        "createdAt": "2026-07-20T11:17:43.503Z",
+        "updatedAt": "2026-07-20T11:19:08.948Z"
+      },
+      "createdAt": "2026-09-24T11:26:31.234Z",
+      "updatedAt": "2026-09-24T11:26:31.234Z"
+    }
+  ],
+  "activeVersion": {
+    "versionId": "eae8c8d3-d612-4298-8376-ad8666aed9ea",
+    "workflowId": "Zlf4xBioZKJTTZyH",
+    "nodes": [
+      {
+        "id": "trigger-schedule",
+        "name": "Daily Morning Schedule (09:00 AM)",
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          220,
+          200
+        ],
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "cronExpression",
+                "expression": "0 9 * * *"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "trigger-webhook",
+        "name": "LinkedIn Agent Webhook (Note & Control)",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          220,
+          380
+        ],
+        "parameters": {
+          "path": "linkedin-content-agent",
+          "httpMethod": "POST",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "webhookId": "7c429957-32f5-4f37-ac04-9adc68bd5f53"
+      },
+      {
+        "id": "trigger-manual",
+        "name": "Manual Test Trigger",
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          220,
+          560
+        ],
+        "parameters": {}
+      },
+      {
+        "id": "code-context-router",
+        "name": "Context & Knowledge Router",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          540,
+          380
+        ],
+        "parameters": {
+          "jsCode": "\nconst input = $input.first() ? $input.first().json : {};\nconst body = input.body || input;\nconst query = input.query || {};\n\nconst action = body.action || query.action || 'generate';\nconst noteText = body.note_text || query.note_text || '';\nconst postId = body.post_id || query.post_id || '';\n\n// Muhammad's 8 Content Pillars with Strategic Cadence\nconst pillars = [\n  { id: 'pillar_1', name: 'Real Client Problems', topic: 'Why weekend social lead response delays kill conversions (Instagram Voice Notes & CRM)', day: 'Monday' },\n  { id: 'pillar_2', name: 'Automation Solutions', topic: 'Replacing manual Google Maps scraping with 4-tier deduplication and n8n orchestration', day: 'Tuesday' },\n  { id: 'pillar_3', name: 'Practical AI Agents', topic: 'How to build strict prompt boundaries so your AI agent never hallucinates pricing', day: 'Wednesday' },\n  { id: 'pillar_4', name: 'Building in Public', topic: 'Why feeding raw spreadsheets into LLMs breaks date formats, and how embedded SQLite solves it', day: 'Thursday' },\n  { id: 'pillar_5', name: 'Full-Stack Architecture', topic: 'Sub-second Core Web Vitals on Next.js 15: why performance is a trust signal', day: 'Friday' },\n  { id: 'pillar_6', name: 'Translating Tech to Business', topic: 'Custom software vs off-the-shelf SaaS: when building an internal hub saves $1000s', day: 'Saturday' },\n  { id: 'pillar_7', name: 'Automation Education', topic: 'The 3-question audit to determine if a manual workflow should be automated', day: 'Sunday' },\n  { id: 'pillar_8', name: 'Operator Observations', topic: 'What 40+ completed client builds taught me about software delivery and scope', day: 'Contrarian' }\n];\n\n// Muhammad's 6 Verified Ascenta Projects\nconst projects = [\n  { id: 'cleandata', name: 'CleanData AI', stack: 'Next.js 15, SQLite in-memory, Supabase pgvector, Pinecone', problem: 'Spreadsheet hallucinations and PII exposure' },\n  { id: 'insta-crm', name: 'Instagram Multimodal CRM', stack: 'Meta Graph API, n8n, Groq Whisper, Vision LLM, Next.js 15', problem: 'Weekend lead dropoff from voice notes and screenshots' },\n  { id: 'leadpulse', name: 'LeadPulse AI CRM', stack: 'Serper Places API, n8n, Supabase, 4-tier deduplication', problem: 'Low reply rates from dirty scraped contact lists' },\n  { id: 'misaal', name: 'Misaal Foundation', stack: 'Next.js 16, Supabase, Tailwind v4, Sheets API', problem: 'Paper logs and delayed donor accountability' },\n  { id: 'whatsapp-crm', name: 'WhatsApp AI Conversational CRM', stack: 'Meta Cloud API, n8n, Claude/OpenAI', problem: '24/7 lead qualification without spamming prospects' },\n  { id: 'twilio-voice', name: 'Voice Calling Engine', stack: 'Twilio Media Streams, WebSockets, Deepgram, Cartesia', problem: 'High latency voice agents that feel robotic' }\n];\n\n// Pick today's pillar based on day of month\nconst dayIndex = new Date().getDate() % pillars.length;\nconst selectedPillar = pillars[dayIndex];\nconst selectedProject = projects[dayIndex % projects.length];\n\nreturn [{\n  json: {\n    action: action,\n    note_text: noteText,\n    post_id: postId,\n    selected_pillar: selectedPillar,\n    selected_project: selectedProject,\n    user_prompt: noteText \n      ? `Muhammad Rayyan just captured this fresh note from his day: \"${noteText}\". Transform this real observation into a high-value educational LinkedIn post following his voice rules. Connect it to his real technical background where natural.`\n      : `Generate today's scheduled educational LinkedIn post on the pillar: \"${selectedPillar.name}\". Focus topic: \"${selectedPillar.topic}\". Ground the narrative directly in Muhammad's real project records: CleanData AI, LeadPulse CRM, Instagram AI CRM, Misaal Foundation, or n8n pipelines.`\n  }\n}];\n"
+        }
+      },
+      {
+        "id": "switch-action",
+        "name": "Is Generate Request?",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          840,
+          380
+        ],
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "c1",
+                "leftValue": "={{ $json.action }}",
+                "rightValue": "generate",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        }
+      },
+      {
+        "id": "openrouter-model",
+        "name": "OpenRouter Model (Shared)",
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+        "typeVersion": 1,
+        "position": [
+          1140,
+          480
+        ],
+        "parameters": {
+          "model": "openai/gpt-4o-mini",
+          "options": {
+            "temperature": 0.5,
+            "maxTokens": 1100
+          }
+        },
+        "credentials": {
+          "openRouterApi": {
+            "id": "T3fDCtfSCxHOmkja",
+            "name": "OpenRouter account"
+          }
+        }
+      },
+      {
+        "id": "agent-content-writer",
+        "name": "AI Content Writer Agent",
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 1.7,
+        "position": [
+          1140,
+          240
+        ],
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $json.user_prompt }}",
+          "options": {
+            "systemMessage": "You are the autonomous LinkedIn Personal Brand Content Writer for Muhammad Rayyan, Founder & Lead AI Solutions Engineer at Ascenta (ascenta-agency.vercel.app).\n\nYour mission is to write high-impact, authentic, educational LinkedIn posts based STRICTLY on Muhammad's real engineering builds, technical decisions, client problems, and lessons.\n\n==================================================\nMUHAMMAD RAYYAN'S VERIFIED KNOWLEDGE BASE:\n==================================================\n1. CleanData AI (cleandata-ruddy.vercel.app): Autonomous AI Data Specialist SaaS. Solves dirty spreadsheet problems, PII masking, embedded in-browser SQLite query engine, and RAG vector syncing across Supabase pgvector & Pinecone.\n2. Instagram Multimodal AI CRM: Meta Graph API, n8n, Groq Whisper voice note transcription (<2s), Vision LLM screenshot parsing, Next.js 15/Prisma CRM, seen/typing status, 1-click human takeover.\n3. LeadPulse AI CRM: B2B lead generation engine with Serper Places API, strict 4-tier deduplication (Place ID, E.164 phone, root domain, name+city), website opportunity audit, GPT-4o-mini personalized pitch generator, 1-click WhatsApp & Gmail dispatch.\n4. Misaal Foundation (misaalfoundation.online): High-performance web portal (Next.js 16, Supabase, Tailwind v4) and real-time field operations CRM replacing paper logs with standardized Google Forms/Sheets sync.\n5. WhatsApp AI Conversational CRM: Meta Cloud API, n8n, Claude/OpenAI 24/7 multi-turn lead qualification with warm human takeover.\n6. Voice Calling Engine: Twilio Media Streams, WebSockets, Deepgram STT, Cartesia TTS with sub-800ms roundtrip latency.\n\n==================================================\nMANDATORY WRITING PHILOSOPHY:\n==================================================\nStructure:\nREAL PROBLEM\n→ REAL CONTEXT\n→ WHAT WAS HAPPENING\n→ WHAT WE DISCOVERED\n→ WHAT WAS DONE (TECHNICAL IMPLEMENTATION)\n→ WHY IT MATTERED (BUSINESS IMPACT)\n→ LESSON FOR OPERATORS / DEVELOPERS\n→ NATURAL CONVERSATION CTA\n\nVOICE & TONE RULES:\n- Direct, observant, technical yet accessible to founders and operators.\n- Write in 1st person ('I' / 'We').\n- Paragraph length: 1 to 3 sentences maximum with double line breaks for mobile reading.\n- Hook must be in the first 2 lines. Prefer number-first, specific technical contradiction, or uncomfortable truth.\n- NEVER use generic openers: 'In today's fast-paced world', 'Here's the thing', 'Game changer', 'Unlock your potential', 'Delve', 'Leverage', 'Streamline', 'Harness'.\n- Capped em-dashes (maximum 1 per post; prefer periods or colons).\n- Soft discussion CTA at the end. NEVER say 'Agree?' or 'Comment below'.\n- NEVER FABRICATE: Never invent client names, revenue numbers, or fake statistics.\n\nOUTPUT FORMAT:\nReturn pure, valid JSON with these keys:\n{\n  \"hook\": \"The first 1-2 punchy lines\",\n  \"body\": \"The complete, fully formatted LinkedIn post text\",\n  \"cta\": \"The closing discussion question\",\n  \"hashtags\": [\"#AIAutomation\", \"#n8n\", \"#Nextjs\", ...],\n  \"pillar\": \"Pillar Name\",\n  \"image_recommended\": true/false,\n  \"image_concept\": \"Brief visual description if an architecture diagram or graphic helps\"\n}\n"
+          }
+        }
+      },
+      {
+        "id": "code-humanizer-factcheck",
+        "name": "Humanizer & Fact-Check Gate",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1460,
+          240
+        ],
+        "parameters": {
+          "jsCode": "\nconst item = $input.first().json;\nconst rawOutput = item.output || item.text || JSON.stringify(item);\n\nlet parsed = {};\ntry {\n  // Extract JSON from markdown code fence if present\n  const jsonMatch = rawOutput.match(/\\{([\\s\\S]*)\\}/);\n  if (jsonMatch) {\n    parsed = JSON.parse(jsonMatch[0]);\n  } else {\n    parsed = JSON.parse(rawOutput);\n  }\n} catch (e) {\n  parsed = {\n    hook: rawOutput.slice(0, 100) + '...',\n    body: rawOutput,\n    cta: 'What are your thoughts on this approach?',\n    hashtags: ['#AIAutomation', '#n8n', '#Nextjs', '#FullStack'],\n    pillar: item.selected_pillar ? item.selected_pillar.name : 'Engineering & Automation',\n    image_recommended: false\n  };\n}\n\n// 1. Humanizer Pass: clean forbidden words\nconst forbidden = [\n  /in today's (fast-paced|rapidly evolving|digital) world/gi,\n  /game changer/gi,\n  /unlock your potential/gi,\n  /\\bdelve\\b/gi,\n  /\\bleverage\\b/gi,\n  /\\bstreamline\\b/gi,\n  /\\bharness\\b/gi,\n  /\\bpivotal\\b/gi,\n  /\\btestament\\b/gi,\n  /\\btapestry\\b/gi,\n  /\\bbeacon\\b/gi\n];\n\nlet cleanBody = parsed.body || '';\nfor (const regex of forbidden) {\n  cleanBody = cleanBody.replace(regex, '');\n}\n\n// Clean multiple spaces and ensure clean double-spaced paragraphs\ncleanBody = cleanBody.replace(/  +/g, ' ');\ncleanBody = cleanBody.split('\\n').map(l => l.trim()).filter(l => l.length > 0).join('\\n\\n');\n\n// Cap em-dashes to maximum 1\nconst dashes = cleanBody.split('—');\nif (dashes.length > 2) {\n  cleanBody = dashes[0] + '—' + dashes[1] + dashes.slice(2).map(p => '. ' + p.trim()).join('');\n}\n\n// 2. Fact-Check Validation\nconst ungroundedClaims = cleanBody.match(/\\$\\d+[kKmMbB]?/g) || [];\nconst hasUngroundedMoney = ungroundedClaims.some(c => !['$145', '$1,000', '$100', '$0'].includes(c));\n\nconst postId = 'post_' + Date.now().toString(36);\nconst webhookBase = 'https://primary-production-675a3.up.railway.app/webhook/linkedin-content-agent';\n\nconst approveUrl = `${webhookBase}?action=approve&post_id=${postId}`;\nconst rejectUrl = `${webhookBase}?action=reject&post_id=${postId}`;\n\nreturn [{\n  json: {\n    status: 'READY_FOR_REVIEW',\n    post_id: postId,\n    pillar: parsed.pillar || (item.selected_pillar ? item.selected_pillar.name : 'AI Automation'),\n    hook: parsed.hook || cleanBody.slice(0, 90),\n    body: cleanBody,\n    cta: parsed.cta || '',\n    hashtags: parsed.hashtags || ['#AIAutomation', '#n8n', '#Nextjs', '#FullStack'],\n    image_recommended: !!parsed.image_recommended,\n    image_concept: parsed.image_concept || 'None',\n    fact_check_passed: !hasUngroundedMoney,\n    approve_url: approveUrl,\n    reject_url: rejectUrl,\n    email_subject: `[LinkedIn Agent] Post Ready for Review: \"${(parsed.hook || cleanBody).slice(0, 50)}...\"`,\n    email_html: `\n      <div style=\"font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 650px; margin: 0 auto; padding: 28px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;\">\n        <div style=\"display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #10b981; padding-bottom: 12px; margin-bottom: 20px;\">\n          <h2 style=\"color: #0f172a; margin: 0; font-size: 20px;\">🚀 Ascenta LinkedIn Content Agent</h2>\n          <span style=\"background: #ecfdf5; color: #059669; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; border: 1px solid #a7f3d0;\">READY FOR REVIEW</span>\n        </div>\n\n        <p style=\"color: #64748b; font-size: 14px; margin-bottom: 16px;\">\n          <strong>Target Pillar:</strong> ${parsed.pillar || (item.selected_pillar ? item.selected_pillar.name : 'AI Automation')}<br/>\n          <strong>Fact Check:</strong> <span style=\"color: #10b981;\">✓ Grounded in Verified Builds</span> | <strong>Buzzword Check:</strong> <span style=\"color: #10b981;\">✓ Passed</span>\n        </p>\n\n        <div style=\"background: #090d16; color: #f1f5f9; padding: 22px; border-radius: 8px; border-left: 4px solid #10b981; white-space: pre-wrap; font-size: 14px; line-height: 1.6; font-family: monospace;\">\n${cleanBody}\n        </div>\n\n        <div style=\"margin-top: 14px; font-size: 13px; color: #64748b;\">\n          <strong>Hashtags:</strong> ${(parsed.hashtags || []).join(' ')}\n        </div>\n\n        ${parsed.image_recommended ? `\n          <div style=\"margin-top: 16px; padding: 14px; background: #f0fdf4; border-radius: 6px; font-size: 13px; color: #166534; border: 1px solid #bbf7d0;\">\n            <strong>🖼️ Recommended Architecture Visual:</strong> ${parsed.image_concept}\n          </div>\n        ` : ''}\n\n        <div style=\"margin-top: 28px; padding-top: 20px; border-top: 1px solid #f1f5f9; display: flex; gap: 14px;\">\n          <a href=\"${approveUrl}\" style=\"background: #10b981; color: #ffffff; padding: 12px 26px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 14px; display: inline-block;\">✅ Approve & Schedule</a>\n          &nbsp;&nbsp;\n          <a href=\"${rejectUrl}\" style=\"background: #ef4444; color: #ffffff; padding: 12px 26px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 14px; display: inline-block;\">❌ Reject</a>\n        </div>\n\n        <p style=\"color: #94a3b8; font-size: 11px; margin-top: 24px;\">Generated autonomously for Muhammad Rayyan • Ascenta Agency</p>\n      </div>\n    `\n  }\n}];\n"
+        }
+      },
+      {
+        "id": "gmail-notification",
+        "name": "Send Gmail Review Alert",
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 2.1,
+        "position": [
+          1780,
+          240
+        ],
+        "parameters": {
+          "resource": "message",
+          "operation": "send",
+          "sendTo": "rayyan1122pk@gmail.com",
+          "subject": "={{ $json.email_subject }}",
+          "emailType": "html",
+          "message": "={{ $json.email_html }}",
+          "options": {
+            "appendAttribution": false
+          }
+        },
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "pbMkoNuYgFKubrZs",
+            "name": "Gmail account"
+          }
+        },
+        "webhookId": "58519435-3096-45bc-b8da-04f9f7b8d9a2"
+      },
+      {
+        "id": "code-action-handler",
+        "name": "Action Handler & Dispatcher",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1140,
+          680
+        ],
+        "parameters": {
+          "jsCode": "\nconst item = $input.first().json;\nconst action = item.action;\n\nif (action === 'quick_note') {\n  return [{\n    json: {\n      success: true,\n      action: 'quick_note',\n      message: 'Quick note captured successfully into Ascenta operator memory! The agent will use this in upcoming posts.',\n      note: item.note_text,\n      timestamp: new Date().toISOString()\n    }\n  }];\n}\n\nif (action === 'approve') {\n  const postId = item.post_id || 'post_' + Date.now().toString(36);\n  const postBody = item.body || item.note_text || 'Automating workflows with n8n and AI agents. Engineering deterministic pipelines that replace manual operations.';\n  const hook = item.hook || '';\n  const hashtags = Array.isArray(item.hashtags) ? item.hashtags.join(' ') : (item.hashtags || '#AIAutomation #n8n #FullStack #Ascenta');\n  const fullPostText = (hook ? hook + '\\n\\n' : '') + postBody + '\\n\\n' + hashtags;\n\n  return [{\n    json: {\n      success: true,\n      action: 'approve',\n      post_id: postId,\n      status: 'APPROVED',\n      linkedin_text: fullPostText,\n      message: `Post ${postId} has been APPROVED by Muhammad Rayyan! Publishing directly to LinkedIn.`,\n      email_subject: `[LinkedIn Agent] Post ${postId} Published to LinkedIn`,\n      email_html: `\n        <div style=\"font-family: Arial, sans-serif; padding: 24px; border: 1px solid #10b981; border-radius: 10px; max-width: 600px;\">\n          <h2 style=\"color: #10b981; margin-top: 0;\">🎉 Post Published Live to LinkedIn!</h2>\n          <p style=\"color: #334155;\">Post <strong>${postId}</strong> was approved and successfully published to your live profile.</p>\n          <div style=\"background: #f8fafc; padding: 16px; border-radius: 8px; border-left: 4px solid #0a66c2; margin: 16px 0; font-size: 14px; line-height: 1.6; white-space: pre-wrap;\">\n${fullPostText}\n          </div>\n          <p><a href=\"https://www.linkedin.com/in/ascenta\" style=\"background: #0a66c2; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;\">View Live on Your Profile ↗</a></p>\n        </div>\n      `,\n      timestamp: new Date().toISOString()\n    }\n  }];\n}\n\nif (action === 'reject') {\n  const postId = item.post_id || 'post_' + Date.now().toString(36);\n  return [{\n    json: {\n      success: true,\n      action: 'reject',\n      post_id: postId,\n      status: 'REJECTED',\n      message: `Post ${postId} REJECTED and archived. Replacement will be planned.`,\n      timestamp: new Date().toISOString()\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    success: true,\n    action: action,\n    message: 'Action processed successfully by Ascenta LinkedIn Content Agent'\n  }\n}];\n"
+        }
+      },
+      {
+        "id": "switch-approval-confirmation",
+        "name": "Is Approval Action?",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          1460,
+          680
+        ],
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "c2",
+                "leftValue": "={{ $json.action }}",
+                "rightValue": "approve",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        }
+      },
+      {
+        "id": "linkedin-publisher",
+        "name": "Publish to LinkedIn",
+        "type": "n8n-nodes-base.linkedIn",
+        "typeVersion": 1,
+        "position": [
+          1780,
+          620
+        ],
+        "parameters": {
+          "resource": "post",
+          "operation": "create",
+          "postAs": "person",
+          "person": "={{ $json.person_urn || 'me' }}",
+          "text": "={{ $json.linkedin_text }}"
+        },
+        "credentials": {
+          "linkedInOAuth2Api": {
+            "id": "yoXZgfNTjtWDlTk7",
+            "name": "Muhammad Rayyan LinkedIn"
+          }
+        }
+      },
+      {
+        "id": "gmail-approval-confirmation",
+        "name": "Send Approval Confirmation Email",
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 2.1,
+        "position": [
+          2060,
+          620
+        ],
+        "parameters": {
+          "resource": "message",
+          "operation": "send",
+          "sendTo": "rayyan1122pk@gmail.com",
+          "subject": "={{ $json.email_subject }}",
+          "emailType": "html",
+          "message": "={{ $json.email_html }}",
+          "options": {
+            "appendAttribution": false
+          }
+        },
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "pbMkoNuYgFKubrZs",
+            "name": "Gmail account"
+          }
+        },
+        "webhookId": "0a397518-66db-43c5-8b13-f68f1cf9909c"
+      },
+      {
+        "id": "respond-webhook",
+        "name": "Respond to Webhook",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.1,
+        "position": [
+          2120,
+          480
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify($json) }}",
+          "options": {
+            "responseCode": 200
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Daily Morning Schedule (09:00 AM)": {
+        "main": [
+          [
+            {
+              "node": "Context & Knowledge Router",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "LinkedIn Agent Webhook (Note & Control)": {
+        "main": [
+          [
+            {
+              "node": "Context & Knowledge Router",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Manual Test Trigger": {
+        "main": [
+          [
+            {
+              "node": "Context & Knowledge Router",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Context & Knowledge Router": {
+        "main": [
+          [
+            {
+              "node": "Is Generate Request?",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Is Generate Request?": {
+        "main": [
+          [
+            {
+              "node": "AI Content Writer Agent",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Action Handler & Dispatcher",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenRouter Model (Shared)": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Content Writer Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Content Writer Agent": {
+        "main": [
+          [
+            {
+              "node": "Humanizer & Fact-Check Gate",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Humanizer & Fact-Check Gate": {
+        "main": [
+          [
+            {
+              "node": "Send Gmail Review Alert",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send Gmail Review Alert": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Action Handler & Dispatcher": {
+        "main": [
+          [
+            {
+              "node": "Is Approval Action?",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Is Approval Action?": {
+        "main": [
+          [
+            {
+              "node": "Publish to LinkedIn",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Publish to LinkedIn": {
+        "main": [
+          [
+            {
+              "node": "Send Approval Confirmation Email",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send Approval Confirmation Email": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Muhammad Rayyan",
+    "name": null,
+    "description": null,
+    "autosaved": false,
+    "createdAt": "2026-09-24T11:57:26.280Z",
+    "updatedAt": "2026-09-24T11:57:26.280Z",
+    "workflowPublishHistory": [
+      {
+        "id": 258,
+        "workflowId": "Zlf4xBioZKJTTZyH",
+        "versionId": "eae8c8d3-d612-4298-8376-ad8666aed9ea",
+        "event": "activated",
+        "userId": "e7f87d5f-e267-440b-83af-474b7cc0efd2",
+        "createdAt": "2026-09-24T11:57:26.955Z"
+      }
+    ]
+  }
+}

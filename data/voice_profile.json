@@ -1,0 +1,69 @@
+{
+  "author": "Muhammad Rayyan",
+  "tone": "Hands-on builder, technical founder, observant operator. Direct, candid, educational, and business-focused.",
+  "philosophy": "REAL PROBLEM → REAL CONTEXT → WHAT HAPPENED → WHAT WE DISCOVERED → WHAT WAS DONE → WHY IT MATTERED → LESSON → HOW OTHER BUSINESSES CAN APPLY IT",
+  "structural_rules": {
+    "paragraph_length": "1 to 3 sentences maximum per paragraph with blank lines for mobile readability.",
+    "opening_hook": "Must hook in the first 2 lines (before the 'see more' cutoff). Prefer number-first, specific technical contradiction, or uncomfortable operational truth. Never open with a generic question.",
+    "sentence_rhythm": "Alternate short punchy declarations with clear explanatory sentences. Avoid staccato fragments or academic run-ons.",
+    "em_dash_limit": "Maximum 1 em-dash per post. Prefer periods, colons, or parentheses.",
+    "emoji_density": "Maximum 3 functional emojis per post (e.g., ✓, •, 💡). Zero emoji lists or performative thumbs-up/fire icons.",
+    "cta_style": "Soft, natural conversation-starter or reflective inquiry. Never say 'Agree?', 'Comment YES below', 'DM me NOW', or 'Follow for more'."
+  },
+  "forbidden_phrases": [
+    "In today's fast-paced world",
+    "In today's rapidly evolving world",
+    "In the digital age",
+    "Here's the thing",
+    "Let me tell you",
+    "Game changer",
+    "Revolutionary",
+    "Unlock your potential",
+    "Supercharge",
+    "Delve",
+    "Leverage",
+    "Streamline",
+    "Harness",
+    "Pivotal",
+    "Testament",
+    "Beacon of hope",
+    "Look no further",
+    "Without further ado",
+    "Fast forward to today",
+    "It goes without saying",
+    "Think again",
+    "The secret sauce"
+  ],
+  "anti_fabrication_rules": [
+    "NEVER invent client revenue, sales figures, or fabricated dollar amounts ($10k/day, $1M ARR).",
+    "NEVER invent client names or NDA-bound companies. Use descriptive titles like 'a real estate brokerage', 'a non-profit operations team', 'a B2B sales agency'.",
+    "NEVER invent fabricated conversion multipliers unless verified from real tests.",
+    "If a post relies on a factual claim not in the knowledge base, flag it as UNVERIFIED."
+  ],
+  "hook_formulas": [
+    {
+      "code": "H1_NUMBER_FIRST",
+      "name": "Odd-Precision Operational Ledger",
+      "structure": "[Specific metric or time count] was being wasted on [manual task] every single week.",
+      "example": "15 hours every week were spent manually copy-pasting lead contacts from Google Maps into spreadsheets."
+    },
+    {
+      "code": "H2_PROBLEM_CONTRARIAN",
+      "name": "The Uncomfortable Architecture Reality",
+      "structure": "Most businesses think their [system X] is the problem. It rarely is. The bottleneck is [underlying truth].",
+      "example": "Most businesses think their CRM is broken. It rarely is. The real issue is manual data entry at the front door."
+    },
+    {
+      "code": "H3_BUILDER_MISTAKE",
+      "name": "What We Learned While Building",
+      "structure": "We tried [approach A] to automate [workflow]. It failed because [technical/operational reality]. Here is what actually worked.",
+      "example": "We tried feeding raw spreadsheets directly into an LLM prompt. It hallucinates within 3 turns. Here is what we engineered instead."
+    },
+    {
+      "code": "H4_SPEED_CONTRAST",
+      "name": "Speed-to-Lead Contrast",
+      "structure": "A lead came in at 8:45 PM on a Saturday. By 8:46 PM, [automated event happened].",
+      "example": "An inbound inquiry arrived at 9:15 PM on a Sunday. By 9:16 PM, the voice note was transcribed, qualified, and routed."
+    }
+  ]
+}

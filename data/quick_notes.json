@@ -1,0 +1,50 @@
+[
+  {
+    "id": "note_a1785d6a",
+    "timestamp": "2026-09-24T11:39:36.776405+00:00",
+    "raw_text": "sa",
+    "category": "Operator Observation",
+    "pillar_id": "pillar_8_observations",
+    "used_in_post": false
+  },
+  {
+    "id": "note_a765a25a",
+    "timestamp": "2026-09-24T11:32:51.007385+00:00",
+    "raw_text": "Clients think AI will replace their whole support team. In reality, a human-in-the-loop escalation trigger is what prevents brand disasters.",
+    "category": "Client Problem",
+    "pillar_id": "pillar_1_client_problems",
+    "used_in_post": true
+  },
+  {
+    "id": "note_05497480",
+    "timestamp": "2026-09-24T11:32:06.968012+00:00",
+    "raw_text": "Clients think AI will replace their whole support team. In reality, a human-in-the-loop escalation trigger is what prevents brand disasters.",
+    "category": "Client Problem",
+    "pillar_id": "pillar_1_client_problems",
+    "used_in_post": true
+  },
+  {
+    "id": "note_a0740e3a",
+    "timestamp": "2026-09-24T11:31:09.073912+00:00",
+    "raw_text": "Shipped an automated customer audio transcription caching layer using Groq Whisper and Redis in n8n. Reduced average response latency from 4.2s to 850ms.",
+    "category": "Automation Solution",
+    "pillar_id": "pillar_2_automation_solutions",
+    "used_in_post": true
+  },
+  {
+    "id": "note_001",
+    "timestamp": "2026-09-24T16:15:00Z",
+    "raw_text": "Today I spent 2 hours debugging an n8n webhook listener that kept timing out because an external API was taking 15 seconds to reply. Solved it by sending an immediate 202 Accepted response and moving the heavy AI transcription into a background sub-workflow.",
+    "category": "Technical Insight",
+    "pillar_id": "pillar_4_building_in_public",
+    "used_in_post": false
+  },
+  {
+    "id": "note_002",
+    "timestamp": "2026-09-24T16:20:00Z",
+    "raw_text": "A client asked if an AI agent can handle 100% of customer complaints without human intervention. Told them no: any high-risk refund request or escalated frustration must have a zero-latency human takeover trigger.",
+    "category": "Client Observation",
+    "pillar_id": "pillar_3_ai_agents",
+    "used_in_post": false
+  }
+]

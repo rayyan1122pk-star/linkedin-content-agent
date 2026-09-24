@@ -1,0 +1,90 @@
+[
+  {
+    "id": "pillar_1_client_problems",
+    "name": "Real Client Problems",
+    "description": "Deconstruct actual operational bottlenecks: lead leakage, manual data entry, slow customer response times, spreadsheet chaos.",
+    "format": "Problem → Breakdown → Root Cause → Resolution",
+    "example_topics": [
+      "Why manual lead qualification drops 60% of weekend inbound inquiries",
+      "The spreadsheet handover problem between field coordinators and office staff",
+      "Why slow DM response times on Instagram kill paid ad ROI"
+    ]
+  },
+  {
+    "id": "pillar_2_automation_solutions",
+    "name": "Automation Solutions",
+    "description": "Explain how businesses can automate lead generation, CRM syncing, multi-channel outreach, and back-office ops.",
+    "format": "Before/After Workflow Architecture",
+    "example_topics": [
+      "Replacing manual Google Maps lead scraping with an automated 4-tier deduplication pipeline in n8n",
+      "How to sync Google Forms directly to Supabase and real-time operator dashboards with webhooks",
+      "Automating CRM pipeline stage progression directly from WhatsApp conversation milestones"
+    ]
+  },
+  {
+    "id": "pillar_3_ai_agents",
+    "name": "Practical AI Agents",
+    "description": "Practical conversational agents, multimodal ingestion (voice notes/vision), and strict tool-calling boundaries.",
+    "format": "Use Case → Prompt Engineering → Guardrails → Outcome",
+    "example_topics": [
+      "Why we added Groq Whisper to our Instagram AI CRM: parsing customer voice notes in under 2 seconds",
+      "The guardrail pattern: how to stop an AI agent from hallucinating unverified pricing",
+      "Why every customer-facing AI agent must have an instant human-takeover trigger"
+    ]
+  },
+  {
+    "id": "pillar_4_building_in_public",
+    "name": "Building in Public & Lessons",
+    "description": "Real engineering trade-offs, architecture decisions, mistakes, and things discovered while coding production systems.",
+    "format": "Challenge → The Mistake → The Architecture Pivot → What Worked",
+    "example_topics": [
+      "What broke when we tried feeding unstructured prose into an SQLite query engine (and how we fixed it in CleanData AI)",
+      "Optimizing Twilio WebSockets and Deepgram streaming STT to get voice AI latency under 800ms",
+      "Why we chose Supabase and PostgreSQL over generic NoSQL databases for operational CRMs"
+    ]
+  },
+  {
+    "id": "pillar_5_fullstack_dev",
+    "name": "Full-Stack Development & Architecture",
+    "description": "Modern web development with Next.js 15/16, React 19, TypeScript, database schemas, and performance optimization.",
+    "format": "Technical Insight → Business Value Translation",
+    "example_topics": [
+      "Achieving 100/100 Core Web Vitals on Next.js 15: why sub-second load times double visitor trust",
+      "Prisma vs Drizzle vs Supabase Client: picking the right data layer for high-throughput automation hubs",
+      "Designing responsive operator dashboards that non-technical teams actually enjoy using"
+    ]
+  },
+  {
+    "id": "pillar_6_business_tech",
+    "name": "Translating Tech to Business Value",
+    "description": "Bridging the gap between software architecture and business revenue, operational efficiency, and ROI.",
+    "format": "Executive Translation",
+    "example_topics": [
+      "The real cost of a 15-minute response delay: how automated triage saves high-ticket inbound leads",
+      "Custom software vs off-the-shelf SaaS subscriptions: when building an internal hub saves $1,000s/year",
+      "Why software adoption fails when you build complex enterprise UIs for field teams"
+    ]
+  },
+  {
+    "id": "pillar_7_automation_education",
+    "name": "Automation Education & Auditing",
+    "description": "Teaching founders and operators what they should automate, what they should NOT automate, and how to spot manual waste.",
+    "format": "Framework / Checklist",
+    "example_topics": [
+      "The 3-question test to determine if a business process should be automated with n8n or left manual",
+      "Why automating a broken process only creates automated chaos: audit before code",
+      "The 5 manual tasks agency founders waste 10 hours on every week"
+    ]
+  },
+  {
+    "id": "pillar_8_observations",
+    "name": "Operator Observations",
+    "description": "Reflections from working with clients across real estate, non-profits, e-commerce, and agencies.",
+    "format": "Contrarian Observation → Nuance → Practical Takeaway",
+    "example_topics": [
+      "The biggest misconception business owners have about 'hiring AI'",
+      "Why the best AI automations are invisible to the end customer",
+      "What 40+ completed client builds taught me about software delivery"
+    ]
+  }
+]

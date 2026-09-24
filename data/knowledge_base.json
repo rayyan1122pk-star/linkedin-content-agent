@@ -1,0 +1,114 @@
+{
+  "founder": {
+    "name": "Muhammad Rayyan",
+    "role": "Founder & Lead AI Solutions Engineer",
+    "agency": "Ascenta",
+    "agency_url": "https://ascenta-agency.vercel.app",
+    "location": "Lahore, Punjab, Pakistan",
+    "contact": {
+      "email": "rayyan1122pk@gmail.com",
+      "phone": "+92 332 8444557",
+      "linkedin": "https://www.linkedin.com/in/ascenta",
+      "github": "https://github.com/rayyan1122pk-star"
+    },
+    "credentials": [
+      {
+        "institution": "Aghaaz.ai",
+        "focus": "Applied AI Engineering, LLM Architecture, Agentic Workflows, Tool Calling, RAG Pipelines",
+        "key_learnings": "LLM reasoning loops, function calling schemas, vector embeddings, vector databases, multi-agent coordination"
+      },
+      {
+        "institution": "Tech7 Academy",
+        "focus": "Software Engineering & Full-Stack Development",
+        "key_learnings": "Next.js App Router, React architecture, TypeScript ecosystems, PostgreSQL, Supabase relational design"
+      },
+      {
+        "institution": "iSkills",
+        "focus": "Digital Systems & Professional Project Delivery",
+        "key_learnings": "Client discovery protocols, system scoping, translating business bottlenecks into reliable software"
+      },
+      {
+        "institution": "University of the Punjab",
+        "focus": "Computer Science & Software Degree Track (2023-2026)"
+      }
+    ]
+  },
+  "projects": [
+    {
+      "id": "cleandata-ai",
+      "name": "CleanData AI — Autonomous Data Specialist SaaS",
+      "category": "AI Automation & SaaS",
+      "url": "https://cleandata-ruddy.vercel.app",
+      "problem": "Businesses and AI teams waste hundreds of hours manually fixing broken spreadsheet formatting (dates, inconsistent phone formats), worrying about PII leaks, and struggling to query data in SQL or vector databases.",
+      "existing_process": "Manual copy-pasting into Excel, manual regex cleaning, risky data exposure.",
+      "solution": "Built a 10-mode AI Data Specialist platform. Ingests raw spreadsheets or unstructured narrative prose, normalizes phone numbers (E.164) and dates (ISO 8601), masks PII (SSN, credit cards), loads data into an embedded in-browser SQLite engine, and generates semantic vector embeddings syncing to Pinecone, Qdrant, ChromaDB, and Supabase pgvector.",
+      "tech_stack": ["Next.js 15", "React 19", "TypeScript", "Tailwind CSS", "SQLite (Node Native)", "RAG Pipeline", "Vector Embeddings", "Vercel"],
+      "real_challenges": "Handling unstructured natural language prose and converting it reliably into typed relational database schemas without hallucinations.",
+      "lessons": "AI agents need clean, typed, deterministic data boundaries. Trying to feed dirty spreadsheets directly into LLM prompts causes hallucinations and high token costs.",
+      "business_takeaway": "Clean data architecture is 80% of what makes an AI system actually work in production."
+    },
+    {
+      "id": "instagram-ai-crm",
+      "name": "Instagram Multimodal AI Agent & CRM System",
+      "category": "AI Agents & Social Commerce",
+      "github_url": "https://github.com/rayyan1122pk-star/instagram-ai-crm",
+      "problem": "Brands lose over 70% of inbound social media leads because DMs sit unread for hours, manual staff cannot transcribe voice notes or inspect product screenshot inquiries quickly, and leads fall through the cracks.",
+      "existing_process": "Community managers manually typing replies hours later, missing weekend inquiries, losing context between comments and DMs.",
+      "solution": "Engineered an end-to-end CRM-integrated Instagram AI automation. Connects Meta Graph API, n8n orchestration, Groq Whisper (voice transcription), Vision LLM (screenshot parsing), and a dedicated Next.js 15 / Prisma CRM. Dispatches human-like typing indicators and seen receipts, converts post comments into instant DM sequences, and includes a 1-click human takeover toggle.",
+      "tech_stack": ["Next.js 15", "React 19", "TypeScript", "Prisma ORM", "n8n", "Meta Graph API", "Groq Whisper", "Vision LLM", "PostgreSQL"],
+      "real_challenges": "Handling multimodal input (voice notes + images) with sub-3-second response latency while ensuring human operators can seamlessly take over without conflicting with the AI bot.",
+      "lessons": "Users on social media hate talking to robotic chatbots. Adding realistic seen receipts, typing delays, and voice note transcription makes the interaction feel attentive and premium.",
+      "business_takeaway": "Speed-to-lead on social channels isn't a luxury; responding in 30 seconds vs 30 minutes increases consultation bookings by multiples."
+    },
+    {
+      "id": "leadpulse-ai-crm",
+      "name": "LeadPulse AI CRM — B2B Lead Engine & Automated Outreach",
+      "category": "CRM & Outbound Automation",
+      "github_url": "https://github.com/rayyan1122pk-star/lead-generation-crm",
+      "problem": "B2B agencies spend 15+ hours weekly manually scraping directories, verifying phone numbers and emails on slow browser extensions, deduplicating spreadsheets, and writing generic cold outreach that gets marked as spam.",
+      "existing_process": "Manual Google Maps browsing, copy-pasting to CSV, manually checking SSL/website health, generic bulk mailers.",
+      "solution": "Built an autonomous prospecting engine combining Next.js 15, Supabase PostgreSQL, and Railway-hosted n8n. Features Serper Places API combinatorial search, strict 4-tier deduplication (Place ID, E.164 phone, root domain, name+city), automated email enrichment, website vulnerability audit, deterministic 0-100 lead scoring, GPT-4o-mini personalized cold pitch generation, and a 1-click WhatsApp/Gmail outreach hub.",
+      "tech_stack": ["Next.js 15", "React 19", "TypeScript", "Tailwind CSS", "Supabase (PostgreSQL)", "n8n (Railway)", "Serper Places API", "GPT-4o-mini", "Recharts"],
+      "real_challenges": "Preventing duplicate contacts across large search query grids and ensuring cold emails are personalized with real business pain points rather than generic AI fluff.",
+      "lessons": "A high-quality 4-tier deduplication filter and strict verification gate matters more than volume. 50 verified, enriched, personalized leads generate more pipeline than 5,000 scraped spam contacts.",
+      "business_takeaway": "Outreach automation must prioritize verification and context over sheer blasting volume."
+    },
+    {
+      "id": "misaal-foundation",
+      "name": "Misaal Foundation — Non-Profit Portal & Field CRM",
+      "category": "Full-Stack Web & Operations CRM",
+      "url": "https://www.misaalfoundation.online",
+      "problem": "Non-profit field workers were drowning in manual paper logs and messy spreadsheets. Volunteer dispatches were delayed, beneficiary records were duplicated, and compiling monthly donor impact reports took days.",
+      "existing_process": "Physical paper intake, fragmented Google Sheets with missing data, zero donor visibility.",
+      "solution": "Engineered an integrated operational hub: standardized Google Forms for field intake, real-time Google Sheets two-way sync, role-based access for coordinators, donor pipeline tracking, and interactive data visualization charts, paired with a sub-second editorial web portal built with Next.js 16 and Supabase.",
+      "tech_stack": ["Next.js 16", "React 19", "TypeScript", "Tailwind CSS v4", "Supabase", "Google Sheets API", "Recharts", "Vercel"],
+      "real_challenges": "Designing an interface simple enough for non-technical field coordinators to use on low-end mobile devices while maintaining instant real-time data integrity.",
+      "lessons": "Software adoption fails if you build complex enterprise UIs for non-technical teams. Streamlining field intake into familiar, bulletproof forms connected to an automated database eliminates human error completely.",
+      "business_takeaway": "Internal tools don't need to be expensive or complicated; they need to remove manual data friction."
+    },
+    {
+      "id": "whatsapp-ai-crm",
+      "name": "WhatsApp AI Conversational CRM",
+      "category": "Conversational AI & Lead Qualification",
+      "problem": "High inbound inquiry volume caused lead drop-offs during evenings and weekends. Prospects waited up to 6 hours for a response, and sales reps spent half their day answering the exact same pricing and availability questions.",
+      "existing_process": "Manual WhatsApp replies by overwhelmed staff, missed inquiries after 6 PM, no structured CRM logging.",
+      "solution": "Architected a 24/7 intelligent WhatsApp agent using the official Meta Cloud API, n8n, Claude/OpenAI, and Supabase. Executes multi-turn qualification, logs intent and contact info to CRM pipelines, and immediately alerts human reps with conversation summaries when complex deal conditions or high-budget requests are detected.",
+      "tech_stack": ["n8n", "WhatsApp Business API", "Claude API", "OpenAI", "Supabase", "Webhooks"],
+      "real_challenges": "Prompt boundary engineering: ensuring the AI never invents pricing or commits to promises outside its configured knowledge base.",
+      "lessons": "AI agents must know their boundaries. Providing strict fallbacks and instant human-alert triggers makes automated customer qualification reliable and trusted by business owners.",
+      "business_takeaway": "An AI agent shouldn't try to close the entire deal alone; its primary job is 24/7 qualification and warm handoff."
+    },
+    {
+      "id": "voice-calling-engine",
+      "name": "Low-Latency AI Voice Calling Engine",
+      "category": "Voice AI Infrastructure",
+      "problem": "Existing voice bots suffer from 2.5s+ turnaround delay between caller speech and AI audio response, creating awkward pauses, interrupted speech, and high caller frustration.",
+      "existing_process": "Static IVR phone trees ('Press 1 for sales') or high-latency multi-step API chains that feel robotic.",
+      "solution": "Re-engineered the entire pipeline using Twilio Media Streams, WebSocket bidirectional streaming, Deepgram STT, and streaming neural TTS (Cartesia/ElevenLabs) to bring end-to-end conversational turnaround under 800ms.",
+      "tech_stack": ["Twilio Media Streams", "WebSockets", "Deepgram STT", "OpenAI / Claude", "Cartesia / ElevenLabs", "Node.js"],
+      "real_challenges": "Handling Voice Activity Detection (VAD) and instant barge-in so that when the caller interrupts the AI, the AI immediately stops speaking without audio buffering lag.",
+      "lessons": "Latency is the primary UX barrier in Voice AI. Sub-800ms roundtrip feels like a natural conversation; 2,000ms feels broken.",
+      "business_takeaway": "Fast execution and streamlined audio chunking makes conversational voice practical for real appointment booking and emergency triage."
+    }
+  ]
+}
