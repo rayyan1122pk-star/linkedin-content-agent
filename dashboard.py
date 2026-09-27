@@ -82,16 +82,31 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     }
   </style>
 </head>
-<body class="min-h-screen bg-[#f0f2f7] p-4 sm:p-6 lg:p-8 antialiased selection:bg-indigo-600 selection:text-white">
+  <!-- 0. OPERATOR PASSCODE GATE (PROTECTS FROM STRANGERS) -->
+  <div id="auth-gate" class="fixed inset-0 z-50 bg-[#0e1122]/95 backdrop-blur-xl flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-[#15192c] border border-slate-800 rounded-3xl p-8 shadow-2xl text-center space-y-6 text-white">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center mx-auto shadow-lg shadow-indigo-600/30">
+        <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+      </div>
+      <div>
+        <h2 class="font-display font-extrabold text-xl text-white">Ascenta Operator Access</h2>
+        <p class="text-xs text-slate-400 mt-1">Autonomous LinkedIn Content Engine is protected.</p>
+      </div>
 
-  <!-- NOTIFICATION TOAST -->
-  <div id="toast" class="fixed top-6 right-6 z-50 transform transition-all duration-300 translate-y-[-120px] opacity-0 pointer-events-none flex items-center gap-3 px-5 py-3.5 rounded-2xl bg-slate-900 text-white shadow-2xl text-xs font-semibold">
-    <div class="w-5 h-5 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center font-bold text-[11px]">✓</div>
-    <span id="toast-message">Action executed smoothly</span>
+      <div class="space-y-3">
+        <input type="password" id="auth-password-input" placeholder="Enter Operator Passcode..." class="w-full bg-[#1b2038] border border-slate-700/80 rounded-2xl p-3.5 text-center text-sm tracking-widest text-white outline-none focus:border-indigo-500 font-mono transition" onkeydown="if(event.key==='Enter')verifyPasscode()">
+        <button onclick="verifyPasscode()" id="btn-login" class="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold text-xs tracking-wider uppercase transition shadow-lg shadow-indigo-600/25 active:scale-95">
+          Unlock Dashboard ↗
+        </button>
+      </div>
+      <p id="auth-error-msg" class="text-xs text-rose-400 font-medium hidden">Incorrect passcode. Access denied.</p>
+    </div>
   </div>
 
   <!-- MAIN FRAME CONTAINER (MATCHING FINNOVA DESIGN SYSTEM) -->
-  <div class="max-w-[1400px] mx-auto bg-white/60 backdrop-blur-md rounded-[36px] border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-7">
+  <div id="main-app-container" class="max-w-[1400px] mx-auto bg-white/60 backdrop-blur-md rounded-[36px] border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-7 opacity-20 pointer-events-none transition-all duration-300">
 
     <!-- 1. TOP NAVIGATION BAR -->
     <header class="flex flex-col lg:flex-row items-center justify-between gap-4">
@@ -529,11 +544,48 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
   <!-- JAVASCRIPT CONTROLLER -->
   <script>
+    const AUTH_PASS_HASH = "Lzo8767@77_";
     let allPosts = [];
     let selectedPostId = null;
     let currentFilterStatus = 'READY_FOR_REVIEW';
     let currentPillarFilter = 'ALL';
     let searchQuery = '';
+
+    function checkAuth() {
+      const savedPass = localStorage.getItem("ascenta_op_pass");
+      if (savedPass === AUTH_PASS_HASH) {
+        unlockDashboard();
+        return true;
+      }
+      return false;
+    }
+
+    function unlockDashboard() {
+      const gate = document.getElementById("auth-gate");
+      const app = document.getElementById("main-app-container");
+      if (gate) gate.classList.add("hidden");
+      if (app) {
+        app.classList.remove("opacity-20", "pointer-events-none");
+        app.classList.add("opacity-100");
+      }
+      loadData();
+    }
+
+    function verifyPasscode() {
+      const input = document.getElementById("auth-password-input");
+      const err = document.getElementById("auth-error-msg");
+      const pass = input.value.trim();
+      if (pass === AUTH_PASS_HASH) {
+        localStorage.setItem("ascenta_op_pass", pass);
+        err.classList.add("hidden");
+        unlockDashboard();
+        showToast("✓ Welcome, Muhammad Rayyan! Operator Mode active.");
+      } else {
+        err.classList.remove("hidden");
+        input.value = "";
+        input.focus();
+      }
+    }
 
     function showToast(msg) {
       const el = document.getElementById('toast');
@@ -1073,7 +1125,13 @@ ${escapeHtml(post.body || '')}
       }
     }
 
-    loadData();
+    if (!checkAuth()) {
+      // Prompt focus on passcode input
+      setTimeout(() => {
+        const inp = document.getElementById("auth-password-input");
+        if (inp) inp.focus();
+      }, 300);
+    }
   </script>
 
 </body>
